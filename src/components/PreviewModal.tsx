@@ -10,7 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Version } from '@/types/version';
+import { Version } from '@/types';
 import * as api from '@/lib/api';
 
 interface PreviewModalProps {
@@ -79,23 +79,23 @@ export function PreviewModal({ isOpen, onClose, versionId, onOpenNewTab }: Previ
                 }`}>
                   {version.status}
                 </span>
-                <span>Created at: {new Date(version.timestamp).toLocaleString()}</span>
+                <span>Created at: {new Date(version.createdAt).toLocaleString()}</span>
               </div>
               {version.message && (
                 <div>Message: {version.message}</div>
               )}
-              {version.publishedAt && (
+              {version.publishedAt && version.publishedBy && (
                 <div>
                   Published by {version.publishedBy} at {new Date(version.publishedAt).toLocaleString()}
                 </div>
               )}
-              {version.tags && version.tags.length > 0 && (
+              {version.tags && Array.isArray(version.tags) && version.tags.length > 0 && (
                 <div className="flex items-center gap-2">
                   <span>Tags:</span>
                   <div className="flex flex-wrap gap-1">
                     {version.tags.map(tag => (
                       <span 
-                        key={tag.name}
+                        key={tag.id}
                         className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full"
                       >
                         {tag.name}
