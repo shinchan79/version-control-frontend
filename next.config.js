@@ -8,22 +8,36 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'https://content-version-system.trinhhaiyen79.workers.dev/:path*',
-        // Thêm cấu hình CORS nếu cần
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization'
-        }
+        destination: 'https://content-version-system.trinhhaiyen79.workers.dev/:path*'
       }
     ]
   },
-  // Thêm cấu hình cho production
+  // Thêm cấu hình headers riêng
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'Content-Type, Authorization',
+          },
+        ],
+      },
+    ]
+  },
   typescript: {
-    // Bỏ qua type checking trong quá trình build để tăng tốc độ
     ignoreBuildErrors: true,
   },
-  swcMinify: true, // Sử dụng SWC minifier thay vì Terser
+  swcMinify: true,
 }
 
 module.exports = nextConfig
