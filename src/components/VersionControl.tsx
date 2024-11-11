@@ -16,7 +16,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Tag as TagIcon, X, Edit2, Eye, ArrowUpDown } from "lucide-react";
 import type { Version, Tag } from "@/types/version";
 import * as api from "@/lib/api";
-import Link from 'next/link';
 import { PreviewModal } from "./PreviewModal";
 
 export function VersionControl() {
@@ -45,20 +44,21 @@ export function VersionControl() {
     
     try {
       const versionsData = await api.getVersions();
-      
-      // Fetch tags for each version
       const versionsWithTags = await Promise.all(
         versionsData.map(async (version) => {
           try {
             const tags = await api.getVersionTags(version.id);
-            return { ...version, tags };
+            const tagsObject: { [key: string]: Tag } = {};
+            tags.forEach(tag => {
+              tagsObject[tag.name] = tag;
+            });
+            return { ...version, tags: tagsObject };
           } catch (error) {
             console.error(`Failed to fetch tags for version ${version.id}:`, error);
-            return version;
+            return { ...version, tags: {} };
           }
         })
       );
-
       setVersions(versionsWithTags);
     } catch (error) {
       console.error('Error in fetchData:', error);
@@ -143,7 +143,6 @@ export function VersionControl() {
     setLoadingStates(prev => ({ ...prev, [versionId]: true }));
     try {
       await api.revertToVersion(versionId);
-      // Wait a bit before fetching to ensure backend has processed the revert
       await new Promise(resolve => setTimeout(resolve, 1000));
       await fetchData();
       toast({
@@ -241,7 +240,7 @@ export function VersionControl() {
     }
   };
 
-  const handleDeleteTag = async (tagName: string) => {
+  const handleDeleteTag = async (versionId: number, tagName: string) => {
     try {
       await api.deleteTag(tagName);
       await fetchData();
@@ -385,7 +384,7 @@ export function VersionControl() {
               </div>
 
               <div className="flex flex-wrap gap-2 mt-2">
-                {version.tags?.map((tag) => (
+                {Object.values(version.tags || {}).map((tag) => (
                   <div
                     key={tag.name}
                     className="flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
@@ -403,7 +402,7 @@ export function VersionControl() {
                       <Edit2 size={14} />
                     </button>
                     <button
-                      onClick={() => handleDeleteTag(tag.name)}
+                      onClick={() => handleDeleteTag(version.id, tag.name)}
                       className="hover:text-blue-600"
                     >
                       <X size={14} />
