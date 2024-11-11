@@ -1,60 +1,79 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 import { config, buildUrl, formatEndpoint } from '@/config';
 import { Version } from '@/types/version';
-import { notFound } from 'next/navigation';
 
-// Thêm generateStaticParams
-export async function generateStaticParams() {
-  try {
-    const endpoint = formatEndpoint(config.ENDPOINTS.GET_VERSIONS, {
-      id: config.DEFAULT_CONTENT_ID
-    });
-    
-    const response = await fetch(buildUrl(endpoint));
-    if (!response.ok) return [];
-    
-    const versions = await response.json();
-    return versions.map((version: Version) => ({
-      id: version.id.toString()
-    }));
-  } catch (error) {
-    console.error('Error generating params:', error);
-    return [];
-  }
-}
+export default function PreviewPage() {
+  const params = useParams();
+  const [version, setVersion] = useState<Version | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-async function getVersion(id: string): Promise<Version> {
-  try {
-    const endpoint = formatEndpoint(config.ENDPOINTS.GET_VERSION, {
-      id: config.DEFAULT_CONTENT_ID,
-      versionId: id
-    });
-    
-    const response = await fetch(buildUrl(endpoint), {
-      headers: config.DEFAULT_HEADERS,
-      cache: 'no-store' // Thay đổi để luôn lấy dữ liệu mới nhất
-    });
+  useEffect(() => {
+    const fetchVersion = async () => {
+      try {
+        const endpoint = formatEndpoint(config.ENDPOINTS.GET_VERSION, {
+          id: config.DEFAULT_CONTENT_ID,
+          versionId: params.id
+        });
+        
+        const response = await fetch(buildUrl(endpoint), {
+          headers: config.DEFAULT_HEADERS,
+        });
 
-    if (!response.ok) {
-      if (response.status === 404) {
-        notFound();
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Version not found');
+          }
+          const errorText = await response.text();
+          throw new Error(`Failed to fetch version: ${errorText}`);
+        }
+
+        const data = await response.json();
+        setVersion(data);
+      } catch (error) {
+        console.error('Error fetching version:', error);
+        setError(error instanceof Error ? error.message : 'Failed to load version');
+      } finally {
+        setIsLoading(false);
       }
-      const errorText = await response.text();
-      throw new Error(`Failed to fetch version: ${errorText}`);
-    }
+    };
 
-    return response.json();
-  } catch (error) {
-    console.error('Error fetching version:', error);
-    throw error;
+    fetchVersion();
+  }, [params.id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
-}
 
-interface PageProps {
-  params: { id: string };
-}
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Error</h1>
+          <p className="text-gray-600">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
-export default async function PreviewPage({ params }: PageProps) {
-  const version = await getVersion(params.id);
+  if (!version) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Not Found</h1>
+          <p className="text-gray-600">Version not found</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">

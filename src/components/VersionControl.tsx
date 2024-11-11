@@ -278,8 +278,9 @@ export function VersionControl() {
     setIsPreviewModalOpen(true);
   };
 
-  const handleOpenInNewTab = (versionId: number) => {
-    window.open(`/preview/${versionId}`, '_blank');
+  const handlePreview = (versionId: number) => {
+    const baseUrl = window.location.origin;
+    window.open(`${baseUrl}/preview/${versionId}`, '_blank');
   };
 
   return (
