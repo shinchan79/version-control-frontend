@@ -55,7 +55,7 @@ export function PreviewModal({ isOpen, onClose, versionId, onOpenNewTab }: Previ
     if (!version?.tags || Object.keys(version.tags).length === 0) {
       return null;
     }
-
+  
     return (
       <div className="flex items-center gap-2">
         <span>Tags:</span>
