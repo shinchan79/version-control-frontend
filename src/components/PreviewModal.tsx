@@ -10,7 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Version } from '@/types';
+import { Version, Tag } from '@/types';
 import * as api from '@/lib/api';
 
 interface PreviewModalProps {
@@ -51,6 +51,28 @@ export function PreviewModal({ isOpen, onClose, versionId, onOpenNewTab }: Previ
     }
   }, [isOpen, versionId]);
 
+  const renderTags = () => {
+    if (!version?.tags || Object.keys(version.tags).length === 0) {
+      return null;
+    }
+
+    return (
+      <div className="flex items-center gap-2">
+        <span>Tags:</span>
+        <div className="flex flex-wrap gap-1">
+          {Object.entries(version.tags).map(([key, tag]) => (
+            <span 
+              key={key}
+              className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full"
+            >
+              {tag.tagName}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl h-[80vh] flex flex-col">
@@ -79,31 +101,18 @@ export function PreviewModal({ isOpen, onClose, versionId, onOpenNewTab }: Previ
                 }`}>
                   {version.status}
                 </span>
-                <span>Created at: {new Date(version.createdAt).toLocaleString()}</span>
+                <span>Created at: {new Date(version.timestamp).toLocaleString()}</span>
               </div>
-              {version.message && (
-                <div>Message: {version.message}</div>
-              )}
+              
+              <div>Message: {version.message}</div>
+              
               {version.publishedAt && version.publishedBy && (
                 <div>
                   Published by {version.publishedBy} at {new Date(version.publishedAt).toLocaleString()}
                 </div>
               )}
-              {version.tags && Array.isArray(version.tags) && version.tags.length > 0 && (
-                <div className="flex items-center gap-2">
-                  <span>Tags:</span>
-                  <div className="flex flex-wrap gap-1">
-                    {version.tags.map(tag => (
-                      <span 
-                        key={tag.id}
-                        className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full"
-                      >
-                        {tag.name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+              
+              {renderTags()}
             </div>
           )}
 
