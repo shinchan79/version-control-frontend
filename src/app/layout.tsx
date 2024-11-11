@@ -14,8 +14,19 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Version Control System",
-  description: "A simple version control system for content management",
+  title: "Content Version System",
+  description: "Manage and track content changes with version history",
+  icons: {
+    icon: '/favicon.ico',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

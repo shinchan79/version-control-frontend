@@ -1,12 +1,6 @@
 'use client';
 
 import { VersionControl } from '@/components/VersionControl';
-import type { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Content Version System',
-  description: 'Manage and track content changes with version history',
-}
 
 export default function HomePage() {
   return (
