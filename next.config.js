@@ -4,10 +4,10 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL}/:path*`,
-      },
-    ];
-  },
+        destination: 'https://content-version-system.trinhhaiyen79.workers.dev/:path*'
+      }
+    ]
+  }
 }
 
 module.exports = nextConfig
