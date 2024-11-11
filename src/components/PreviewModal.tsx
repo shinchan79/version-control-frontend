@@ -10,7 +10,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Version, Tag } from '@/types';
+import { Version, Tag } from '@/types/version';  // Sửa import path
 import * as api from '@/lib/api';
 
 interface PreviewModalProps {
@@ -65,7 +65,7 @@ export function PreviewModal({ isOpen, onClose, versionId, onOpenNewTab }: Previ
               key={key}
               className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full"
             >
-              {tag.tagName}
+              {tag.tagName}  {/* Sửa từ tag.name thành tag.tagName */}
             </span>
           ))}
         </div>
