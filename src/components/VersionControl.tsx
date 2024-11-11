@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Loader2, Tag as TagIcon, X, Edit2, Eye, ArrowUpDown, ExternalLink } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -278,7 +279,7 @@ export function VersionControl() {
     setIsPreviewModalOpen(true);
   };
 
-  const handlePreview = (versionId: number) => {
+  const handleOpenInNewTab = (versionId: number) => {
     const baseUrl = window.location.origin;
     window.open(`${baseUrl}/preview/${versionId}`, '_blank');
   };
@@ -330,6 +331,14 @@ export function VersionControl() {
                   >
                     <Eye className="h-4 w-4 mr-1" />
                     Preview
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleOpenInNewTab(version.id)}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-1" />
+                    Open in New Tab
                   </Button>
                   <Button
                     variant="outline"
