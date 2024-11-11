@@ -1,7 +1,3 @@
-// Cấu hình động cho Next.js App Router
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 // Cấu hình chính
 export const config = {
   // API URL - đường dẫn tới backend service
@@ -43,6 +39,22 @@ export const config = {
     'Accept': 'application/json'
   },
   
+  // Fetch configurations
+  FETCH_CONFIG: {
+    static: {
+      revalidate: 10,
+      headers: {
+        'Cache-Control': 'public, s-maxage=10, stale-while-revalidate=59'
+      }
+    },
+    dynamic: {
+      cache: 'no-store',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
+      }
+    }
+  },
+  
   // Các settings khác
   SETTINGS: {
     MAX_CONTENT_LENGTH: 1000000, // 1MB
@@ -57,6 +69,16 @@ export function getHeaders(additionalHeaders: HeadersInit = {}): HeadersInit {
   return {
     ...config.DEFAULT_HEADERS,
     ...additionalHeaders
+  };
+}
+
+// Helper function để lấy fetch config
+export function getFetchConfig(type: 'static' | 'dynamic' = 'static'): RequestInit {
+  return {
+    headers: getHeaders(config.FETCH_CONFIG[type].headers),
+    ...(type === 'static' 
+      ? { next: { revalidate: config.FETCH_CONFIG.static.revalidate } }
+      : { cache: 'no-store' })
   };
 }
 
@@ -86,6 +108,13 @@ export function buildUrl(endpoint: string, params: Record<string, string | numbe
 // Helper function để validate input
 export function validateInput(input: string, maxLength: number): boolean {
   return input.length <= maxLength;
+}
+
+export function getStaticConfig(): RequestInit {
+  return {
+    headers: getHeaders(),
+    next: { revalidate: 60 } // Cache trong 60 giây
+  };
 }
 
 // Export default config

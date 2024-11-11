@@ -2,8 +2,25 @@ import { config, buildUrl, formatEndpoint } from '@/config';
 import { Version } from '@/types/version';
 import { notFound } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// Thêm generateStaticParams
+export async function generateStaticParams() {
+  try {
+    const endpoint = formatEndpoint(config.ENDPOINTS.GET_VERSIONS, {
+      id: config.DEFAULT_CONTENT_ID
+    });
+    
+    const response = await fetch(buildUrl(endpoint));
+    if (!response.ok) return [];
+    
+    const versions = await response.json();
+    return versions.map((version: Version) => ({
+      id: version.id.toString()
+    }));
+  } catch (error) {
+    console.error('Error generating params:', error);
+    return [];
+  }
+}
 
 async function getVersion(id: string): Promise<Version> {
   try {
@@ -14,8 +31,7 @@ async function getVersion(id: string): Promise<Version> {
     
     const response = await fetch(buildUrl(endpoint), {
       headers: config.DEFAULT_HEADERS,
-      cache: 'no-store',
-      next: { revalidate: 0 }
+      cache: 'no-store' // Thay đổi để luôn lấy dữ liệu mới nhất
     });
 
     if (!response.ok) {
@@ -34,17 +50,14 @@ async function getVersion(id: string): Promise<Version> {
 }
 
 interface PageProps {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }
 
 export default async function PreviewPage({ params }: PageProps) {
-  // Await params trước khi sử dụng
-  const { id } = await params;
-  const version = await getVersion(id);
+  const version = await getVersion(params.id);
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Rest of your JSX remains the same */}
       <header className="sticky top-0 z-50 bg-white border-b">
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-2xl font-bold text-gray-900">

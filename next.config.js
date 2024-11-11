@@ -1,43 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
+  output: 'export',
   images: {
     unoptimized: true
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://content-version-system.trinhhaiyen79.workers.dev/:path*'
-      }
-    ]
-  },
-  // Thêm cấu hình headers riêng
-  async headers() {
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*',
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: 'Content-Type, Authorization',
-          },
-        ],
-      },
-    ]
-  },
+  // Xóa rewrites và headers vì không hoạt động với output: 'export'
   typescript: {
     ignoreBuildErrors: true,
   },
   swcMinify: true,
+  // Thêm basePath nếu cần
+  basePath: '',
+  // Thêm trailingSlash để đảm bảo URL endpoints nhất quán
+  trailingSlash: true,
+  // Tắt strict mode trong development
+  reactStrictMode: false,
+  // Cấu hình env variables public
+  env: {
+    NEXT_PUBLIC_API_URL: 'https://content-version-system.trinhhaiyen79.workers.dev'
+  }
 }
 
 module.exports = nextConfig
