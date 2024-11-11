@@ -1,6 +1,7 @@
 'use client';
 
 import { VersionControl } from '@/components/VersionControl';
+import Link from 'next/link';
 
 export default function HomePage() {
   return (
@@ -22,23 +23,23 @@ export default function HomePage() {
         <footer className="mt-16 py-4 border-t text-center text-sm text-gray-500">
           <p>
             Built with{' '}
-            <a 
-              href="https://nextjs.org" 
-              target="_blank" 
+            <Link 
+              href="https://nextjs.org"
+              target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-600"
             >
               Next.js
-            </a>
+            </Link>
             {' '}and{' '}
-            <a 
-              href="https://workers.cloudflare.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <Link
+              href="https://workers.cloudflare.com"
+              target="_blank"
+              rel="noopener noreferrer" 
               className="text-blue-500 hover:text-blue-600"
             >
               Cloudflare Workers
-            </a>
+            </Link>
           </p>
         </footer>
       </div>
