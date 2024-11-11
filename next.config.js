@@ -9,10 +9,13 @@ const nextConfig = {
   },
   swcMinify: true,
   trailingSlash: true,
-  assetPrefix: './',
+  assetPrefix: '/',
   distDir: 'out',
   env: {
     NEXT_PUBLIC_API_URL: 'https://content-version-system.trinhhaiyen79.workers.dev'
+  },
+  experimental: {
+    optimizeFonts: true
   }
 }
 
