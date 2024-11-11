@@ -14,7 +14,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Tag as TagIcon, X, Edit2, Eye, ArrowUpDown } from "lucide-react";
 import type { Version, Tag } from "@/types/version";
 import * as api from "@/lib/api";
 import { PreviewModal } from "./PreviewModal";
