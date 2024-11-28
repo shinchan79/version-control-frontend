@@ -102,17 +102,17 @@ Root directory:
 
 Environment variables:
     Variable name	Value
+    
     NEXT_PUBLIC_API_BASE
-    	
     https://<your-worker-url/
+    
     NEXT_TELEMETRY_DISABLED
-    	
     1
+    
     NODE_VERSION
-    	
     18
+    
     NPM_VERSION
-    	
     9
 
 ### Manual Deployment Steps
