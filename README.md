@@ -86,12 +86,34 @@ The frontend communicates with a Cloudflare Workers backend API. Key endpoints:
 This application is deployed on Cloudflare Pages.
 
 ### Deployment Configuration
+Following is things you should set in Cloudflare Pages: 
 
-1. Build command: `npm run build`
-2. Build output directory: `.next`
-3. Environment variables:
-   - `NODE_VERSION`: 18
-   - `NEXT_PUBLIC_API_BASE`: API endpoint URL
+Build command:
+    npm install && npm run build
+
+Build output directory:
+    /out
+
+Build system version:
+    2 (latest)
+
+Root directory:
+    /
+
+Environment variables:
+    Variable name	Value
+    NEXT_PUBLIC_API_BASE
+    	
+    https://<your-worker-url/
+    NEXT_TELEMETRY_DISABLED
+    	
+    1
+    NODE_VERSION
+    	
+    18
+    NPM_VERSION
+    	
+    9
 
 ### Manual Deployment Steps
 
